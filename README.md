@@ -62,6 +62,7 @@ The application supports the following tools:
 - [ ] Tests
 - [ ] CI/CD
 - [ ] Add MCP support
+- [ ] CLI
 
 ## 🔧 Adding Tools
 

@@ -66,15 +66,16 @@ Current, the agent supports the following basic tools:
 
 ### Features
 
-- [ ] Help menu
+- [x] Shortcuts menu
 - [ ] Syntax Highlighting
+- [ ] Code diffs
 - [ ] Tests
 - [ ] Undo
 - [ ] CI/CD
 - [ ] Add MCP support
 - [ ] CLI
 - [ ] Brew
-- [x] Token count
+- [x] Token stats
 
 ## 🔧 Adding Tools
 

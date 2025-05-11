@@ -6,4 +6,5 @@
 ███████║██║ ╚████║██║  ██║███████╗███████╗
 ╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚══════╝
 
+This project is open source! For questions or issues, please visit our GitHub repository: https://github.com/sirsjg/snazz-go
 I'm ready to assist! What are we doing today? (press '?' to for shortcuts)

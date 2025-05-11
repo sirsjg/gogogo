@@ -58,6 +58,7 @@ func (b *Bot) Execute(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
+
 		dialogue = append(dialogue, response.ToParam())
 
 		toolResponses := []anthropic.ContentBlockParamUnion{}
@@ -71,10 +72,18 @@ func (b *Bot) Execute(ctx context.Context) error {
 				toolResponses = append(toolResponses, result)
 			}
 		}
+
+		inputTokens := response.Usage.InputTokens 
+		outputTokens := response.Usage.OutputTokens 
+		
+		fmt.Printf("\033[1;33mToken Usage: Input: %d, Output: %d\033[0m\n", inputTokens, outputTokens) // Display token usage in yellow
+		fmt.Println()
+
 		if len(toolResponses) == 0 {
 			acceptInput = true
 			continue
 		}
+
 		acceptInput = false
 		dialogue = append(dialogue, anthropic.NewUserMessage(toolResponses...))
 	}
@@ -96,7 +105,7 @@ func (b *Bot) invokeTool(id, name string, input json.RawMessage) anthropic.Conte
 		return anthropic.NewToolResultBlock(id, "tool not found", true)
 	}
 
-	fmt.Printf("\033[1;35mTool: %s(%s)\033[0m\n", name, input)
+	fmt.Printf("\033[1;35mTool:\033[0m %s(%s)\n", name, input)
 	fmt.Println() 
 	result, err := tool.Handler(input)
 	if err != nil {

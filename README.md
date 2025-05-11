@@ -74,6 +74,7 @@ Current, the agent supports the following basic tools:
 - [ ] Add MCP support
 - [ ] CLI
 - [ ] Brew
+- [ ] Token count
 
 ## 🔧 Adding Tools
 

@@ -38,16 +38,18 @@ func (b *Bot) Execute(ctx context.Context) error {
 	banner, err := os.ReadFile("./content/banner.txt")
 	if err == nil {
 		fmt.Println(string(banner))
+		fmt.Println()
 	}
 
 	acceptInput := true
 	for {
 		if acceptInput {
-			fmt.Print("\033[1;31mYou:\033[0m ")
+			fmt.Print("\033[1;31m>\033[0m ")
 			userMessage, ok := b.readInput()
 			if !ok {
 				break
 			}
+			fmt.Println() 
 
 			dialogue = append(dialogue, anthropic.NewUserMessage(anthropic.NewTextBlock(userMessage)))
 		}
@@ -62,7 +64,8 @@ func (b *Bot) Execute(ctx context.Context) error {
 		for _, content := range response.Content {
 			switch content.Type {
 			case "text":
-				fmt.Printf("\033[1;92mAgent:\033[0m %s\n", content.Text)
+				fmt.Printf("\033[1;90m%s\033[0m\n", content.Text) 
+				fmt.Println()
 			case "tool_use":
 				result := b.invokeTool(content.ID, content.Name, content.Input)
 				toolResponses = append(toolResponses, result)
@@ -94,6 +97,7 @@ func (b *Bot) invokeTool(id, name string, input json.RawMessage) anthropic.Conte
 	}
 
 	fmt.Printf("\033[1;35mTool: %s(%s)\033[0m\n", name, input)
+	fmt.Println() 
 	result, err := tool.Handler(input)
 	if err != nil {
 		return anthropic.NewToolResultBlock(id, err.Error(), true)

@@ -1,6 +1,6 @@
 # ✨ Snazz Code Agent
 
-Snazz is a lightweight command-line coding agent built by enthusiasts, for enthusiasts. Whether you're navigating through file reading, directory listing, or quick file edits, this trusty bot is here to make your coding experience smooth and efficient.
+Snazz is a lightweight command-line coding agent written in Go built by enthusiasts, for enthusiasts. Whether you're navigating through file reading, directory listing, or quick file edits, this trusty bot is here to make your coding experience smooth and efficient.
 
 **Note:** This project is currently under active development. Contributions are highly encouraged—join us in making Snazz even better!
 
@@ -56,14 +56,20 @@ Current, the agent supports the following basic tools:
 
 ## 📝 To do
 
+### Tools
+
 - [x] File Reader Tool
 - [x] Directory Reader Tool
 - [x] File Editor Tool
 - [x] Command Runner Tool
 - [x] Text Search Tool
-- [ ] Code Formatter
+
+### Features
+
 - [ ] Help menu
+- [ ] Syntax Highlighting
 - [ ] Tests
+- [ ] Undo
 - [ ] CI/CD
 - [ ] Add MCP support
 - [ ] CLI

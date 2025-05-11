@@ -29,6 +29,7 @@ func main() {
 		tools.FileEditorTool,
 		tools.CommandRunnerTool,
 		tools.TextSearchTool,
+		tools.DiffViewerTool,
 	}
 
 	systemPrompt := bot.LoadSystemPrompt("content/prompts/system.md")

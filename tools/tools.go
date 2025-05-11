@@ -12,4 +12,3 @@ type ToolDefinition struct {
 	InputFormat     anthropic.ToolInputSchemaParam `json:"input_format"`
 	Handler         func(input json.RawMessage) (string, error)
 }
-

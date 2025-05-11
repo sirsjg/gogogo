@@ -62,7 +62,7 @@ func (b *Bot) Execute(ctx context.Context) error {
 		for _, content := range response.Content {
 			switch content.Type {
 			case "text":
-				fmt.Printf("\033[1;92mClaude:\033[0m %s\n", content.Text)
+				fmt.Printf("\033[1;92mAgent:\033[0m %s\n", content.Text)
 			case "tool_use":
 				result := b.invokeTool(content.ID, content.Name, content.Input)
 				toolResponses = append(toolResponses, result)
@@ -93,7 +93,7 @@ func (b *Bot) invokeTool(id, name string, input json.RawMessage) anthropic.Conte
 		return anthropic.NewToolResultBlock(id, "tool not found", true)
 	}
 
-	fmt.Printf("Tool: %s(%s)\n", name, input)
+	fmt.Printf("\033[1;35mTool: %s(%s)\033[0m\n", name, input)
 	result, err := tool.Handler(input)
 	if err != nil {
 		return anthropic.NewToolResultBlock(id, err.Error(), true)

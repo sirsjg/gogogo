@@ -1,4 +1,4 @@
-# ✨ Sizzle Code Agent
+# ✨ Snazzy Code Agent
 
 Snazzy is a lightweight command-line coding agent built by enthusiasts, for enthusiasts. Whether you're navigating through file reading, directory listing, or quick file edits, this trusty bot is here to make your coding experience smooth and efficient.
 
@@ -44,12 +44,15 @@ go run main.go
 
 ## 🧰 Tools
 
-The application supports the following tools:
+Current, the agent supports the following basic tools:
 
-1. **FileReaderTool**: Reads the content of a file.
-2. **DirectoryListerTool**: Lists the contents of a directory.
-3. **FileEditorTool**: Edits a file based on input.
-4. **CommandRunnerTool**: Executes a safe shell command and returns stdout/stderr.
+| Tool Name           | Description                                                                 |
+|---------------------|-----------------------------------------------------------------------------|
+| **FileReaderTool**  | Reads the content of a file.                                               |
+| **DirectoryListerTool** | Lists the contents of a directory.                                         |
+| **FileEditorTool**  | Edits a file based on input.                                                |
+| **CommandRunnerTool** | Executes a safe shell command and returns stdout/stderr.                    |
+| **TextSearchTool**  | Searches for a string or pattern in files under a given directory.           |
 
 ## 📝 To do
 
@@ -57,20 +60,25 @@ The application supports the following tools:
 - [x] Directory Reader Tool
 - [x] File Editor Tool
 - [x] Command Runner Tool
-- [ ] Text Search Tool
+- [x] Text Search Tool
 - [ ] Code Formatter
+- [ ] Help menu
 - [ ] Tests
 - [ ] CI/CD
 - [ ] Add MCP support
 - [ ] CLI
+- [ ] Brew
 
 ## 🔧 Adding Tools
 
 To add a new tool:
 
-1. Define the tool in `tools/tools.go`.
-2. Implement the tool handler in `tools/helpers.go`.
-3. Register the tool in `main.go`.
+1. Create a new file for the tool in the `tools/` directory. For example, `tools/new_tool.go`.
+2. Define the tool's structure and methods in the new file.
+3. Implement the tool's logic in the same file, ensuring it adheres to the existing patterns and interfaces.
+4. If the tool requires helper functions, add them to `tools/helpers.go`.
+5. Register the tool in `main.go`.
+6. Update the documentation in the `README.md` file to include the new tool.
 
 ## 📜 License
 

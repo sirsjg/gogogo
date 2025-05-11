@@ -28,6 +28,7 @@ func main() {
 		tools.DirectoryListerTool,
 		tools.FileEditorTool,
 		tools.CommandRunnerTool,
+		tools.TextSearchTool,
 	}
 
 	systemPrompt := bot.LoadSystemPrompt("content/prompts/system.md")

@@ -9,6 +9,7 @@ import (
 	"agent/tools"
 
 	"github.com/anthropics/anthropic-sdk-go"
+	"github.com/ttacon/chalk"
 )
 
 type Bot struct {
@@ -46,38 +47,32 @@ func (b *Bot) Execute(ctx context.Context) error {
 	
 	for {
 		if acceptInput {
-			fmt.Print("\033[1;31m>\033[0m ")
+			fmt.Print(chalk.Red.Color("> "))
 			userMessage, ok := b.readInput()
 			if !ok {
 				break
 			}
 			fmt.Println()
 
-			// Check for shortcuts
 			if len(userMessage) > 0 && (userMessage[0] == '?' || userMessage[0] == '/') {
 				switch userMessage {
 				case "/clear":
-					dialogue = []anthropic.MessageParam{} // Clear history
-					fmt.Println("\033[1;32mHistory cleared.\033[0m")
+					dialogue = []anthropic.MessageParam{} 
+					fmt.Println(chalk.Yellow.Color("History cleared."))
 				case "/tokens":
-					showTokenCount = !showTokenCount // Toggle token count display
+					showTokenCount = !showTokenCount 
 					status := "hidden"
 					if showTokenCount {
 						status = "shown"
 					}
-					fmt.Printf("\033[1;32mToken count is now %s.\033[0m\n", status)
+					fmt.Printf(chalk.Blue.Color("Token usage will now be %s.\n"), status)
 				case "/exit":
-					fmt.Println("\033[1;32mExiting...\033[0m")
+					fmt.Println(chalk.Yellow.Color("Bye!"))
 					return nil
 				default:
-					fmt.Println("\033[1;33mShortcuts:\033[0m")
-					fmt.Println("\033[1;90m")
-					fmt.Println("/clear   - clear history")
-					fmt.Println("/tokens  - show/hide token count")
-					fmt.Println("/exit    - leave")
-					fmt.Printf("\033[0m")
+					DisplayShortcuts()
 				}
-				fmt.Println() 
+				fmt.Println()
 				continue
 			}
 			dialogue = append(dialogue, anthropic.NewUserMessage(anthropic.NewTextBlock(userMessage)))
@@ -88,18 +83,6 @@ func (b *Bot) Execute(ctx context.Context) error {
 			return err
 		}
 
-		// Display raw JSON of response.Usage
-		usageJSON, err := json.MarshalIndent(response.Usage, "", "  ")
-		if err == nil {
-			fmt.Printf("\033[1;34mRaw Usage JSON:\033[0m\n%s\n", string(usageJSON))
-		}
-
-		inputTokens := response.Usage.InputTokens   // Track input tokens
-		outputTokens := response.Usage.OutputTokens // Track output tokens
-
-		if showTokenCount {
-			fmt.Printf("\033[1;33mToken Usage: Input: %d, Output: %d\033[0m\n", inputTokens, outputTokens) // Display token usage in yellow
-		}
 
 		dialogue = append(dialogue, response.ToParam())
 
@@ -107,7 +90,7 @@ func (b *Bot) Execute(ctx context.Context) error {
 		for _, content := range response.Content {
 			switch content.Type {
 			case "text":
-				fmt.Printf("\033[1;90m%s\033[0m\n", content.Text) 
+				fmt.Printf(chalk.Dim.TextStyle("%s\n"), content.Text) 
 				fmt.Println()
 			case "tool_use":
 				result := b.invokeTool(content.ID, content.Name, content.Input)
@@ -117,11 +100,18 @@ func (b *Bot) Execute(ctx context.Context) error {
 
 		if len(toolResponses) == 0 {
 			acceptInput = true
-			continue
+		} else {
+			acceptInput = false
+			dialogue = append(dialogue, anthropic.NewUserMessage(toolResponses...))
 		}
 
-		acceptInput = false
-		dialogue = append(dialogue, anthropic.NewUserMessage(toolResponses...))
+		if showTokenCount {
+			usageJSON, err := json.MarshalIndent(response.Usage, "", "  ")
+			if err == nil {
+				fmt.Printf(chalk.Blue.Color("Raw Usage JSON:%s\n\n"), string(usageJSON))
+			}
+		}
+
 	}
 
 	return nil
@@ -141,7 +131,7 @@ func (b *Bot) invokeTool(id, name string, input json.RawMessage) anthropic.Conte
 		return anthropic.NewToolResultBlock(id, "tool not found", true)
 	}
 
-	fmt.Printf("\033[1;35mTool:\033[0m %s(%s)\n", name, input)
+	fmt.Printf(chalk.Dim.TextStyle(chalk.Green.Color("Tool: %s(%s)\n")), name, input)
 	fmt.Println() 
 	result, err := tool.Handler(input)
 	if err != nil {

@@ -1,8 +1,8 @@
-# ✨ Snazzy Code Agent
+# ✨ Snazz Code Agent
 
-Snazzy is a lightweight command-line coding agent built by enthusiasts, for enthusiasts. Whether you're navigating through file reading, directory listing, or quick file edits, this trusty bot is here to make your coding experience smooth and efficient.
+Snazz is a lightweight command-line coding agent built by enthusiasts, for enthusiasts. Whether you're navigating through file reading, directory listing, or quick file edits, this trusty bot is here to make your coding experience smooth and efficient.
 
-**Note:** This project is currently under active development. Contributions are highly encouraged—join us in making Snazzy even better!
+**Note:** This project is currently under active development. Contributions are highly encouraged—join us in making Snazz even better!
 
 ## ✨ Features
 
@@ -24,8 +24,8 @@ export ANTHROPIC_API_KEY="sk-****************************"
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/sirsjg/snazzy.git
-cd snazzy
+git clone https://github.com/sirsjg/snazz-go.git
+cd snazz-go
 ```
 
 2. Install dependencies:

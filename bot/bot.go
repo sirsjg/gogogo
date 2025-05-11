@@ -42,6 +42,8 @@ func (b *Bot) Execute(ctx context.Context) error {
 	}
 
 	acceptInput := true
+	showTokenCount := false
+	
 	for {
 		if acceptInput {
 			fmt.Print("\033[1;31m>\033[0m ")
@@ -49,14 +51,54 @@ func (b *Bot) Execute(ctx context.Context) error {
 			if !ok {
 				break
 			}
-			fmt.Println() 
+			fmt.Println()
 
+			// Check for shortcuts
+			if len(userMessage) > 0 && (userMessage[0] == '?' || userMessage[0] == '/') {
+				switch userMessage {
+				case "/clear":
+					dialogue = []anthropic.MessageParam{} // Clear history
+					fmt.Println("\033[1;32mHistory cleared.\033[0m")
+				case "/tokens":
+					showTokenCount = !showTokenCount // Toggle token count display
+					status := "hidden"
+					if showTokenCount {
+						status = "shown"
+					}
+					fmt.Printf("\033[1;32mToken count is now %s.\033[0m\n", status)
+				case "/exit":
+					fmt.Println("\033[1;32mExiting...\033[0m")
+					return nil
+				default:
+					fmt.Println("\033[1;33mShortcuts:\033[0m")
+					fmt.Println("\033[1;90m")
+					fmt.Println("/clear   - clear history")
+					fmt.Println("/tokens  - show/hide token count")
+					fmt.Println("/exit    - leave")
+					fmt.Printf("\033[0m")
+				}
+				fmt.Println() 
+				continue
+			}
 			dialogue = append(dialogue, anthropic.NewUserMessage(anthropic.NewTextBlock(userMessage)))
 		}
 
 		response, err := b.processRequest(ctx, dialogue)
 		if err != nil {
 			return err
+		}
+
+		// Display raw JSON of response.Usage
+		usageJSON, err := json.MarshalIndent(response.Usage, "", "  ")
+		if err == nil {
+			fmt.Printf("\033[1;34mRaw Usage JSON:\033[0m\n%s\n", string(usageJSON))
+		}
+
+		inputTokens := response.Usage.InputTokens   // Track input tokens
+		outputTokens := response.Usage.OutputTokens // Track output tokens
+
+		if showTokenCount {
+			fmt.Printf("\033[1;33mToken Usage: Input: %d, Output: %d\033[0m\n", inputTokens, outputTokens) // Display token usage in yellow
 		}
 
 		dialogue = append(dialogue, response.ToParam())
@@ -72,12 +114,6 @@ func (b *Bot) Execute(ctx context.Context) error {
 				toolResponses = append(toolResponses, result)
 			}
 		}
-
-		inputTokens := response.Usage.InputTokens 
-		outputTokens := response.Usage.OutputTokens 
-		
-		fmt.Printf("\033[1;33mToken Usage: Input: %d, Output: %d\033[0m\n", inputTokens, outputTokens) // Display token usage in yellow
-		fmt.Println()
 
 		if len(toolResponses) == 0 {
 			acceptInput = true

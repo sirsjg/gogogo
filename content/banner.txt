@@ -6,4 +6,4 @@
 ███████║██║ ╚████║██║  ██║███████╗███████╗
 ╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚══════╝
 
-I'm ready to assist! What’s your first command? (press 'ctrl-c' to quit)
+I'm ready to assist! What are we doing today? (press '?' to for shortcuts)

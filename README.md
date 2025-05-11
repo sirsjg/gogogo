@@ -53,6 +53,7 @@ Current, the agent supports the following basic tools:
 | **FileEditorTool**  | Edits a file based on input.                                                |
 | **CommandRunnerTool** | Executes a safe shell command and returns stdout/stderr.                    |
 | **TextSearchTool**  | Searches for a string or pattern in files under a given directory.           |
+| **DiffViewerTool** | Displays the diffs of changes for a list of files                             |
 
 ## 📝 To do
 

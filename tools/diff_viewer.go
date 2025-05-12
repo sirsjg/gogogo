@@ -15,7 +15,7 @@ type DiffInput struct {
 
 var DiffViewerTool = ToolDefinition{
 	ToolName:        "diff_viewer",
-	ToolDescription: "Displays the diffs of changes for a list of files.",
+	ToolDescription: "Displays the diffs of changes to a file.",
 	InputFormat:     anthropic.ToolInputSchemaParam{Type: "object", Properties: map[string]anthropic.ToolInputSchemaParam{"files": {Type: "array"}}},
 	Handler: func(input json.RawMessage) (string, error) {
 		var diffInput DiffInput

@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/sergi/go-diff/diffmatchpatch"
+	"github.com/ttacon/chalk"
 )
 
 type FileEditorInput struct {
@@ -16,12 +19,10 @@ type FileEditorInput struct {
 var FileEditorInputFormat = GenerateSchema[FileEditorInput]()
 
 var FileEditorTool = ToolDefinition{
-	ToolName: "file_editor",
-	ToolDescription: `Edits a file by replacing specified text.
-
-If the file does not exist, it will be created.`,
-	InputFormat: FileEditorInputFormat,
-	Handler:     EditFileContent,
+	ToolName:        "file_editor",
+	ToolDescription: `Edits a file by replacing specified text. If the file does not exist, it will be created and shown as a full addition.`,
+	InputFormat:     FileEditorInputFormat,
+	Handler:         EditFileContent,
 }
 
 func EditFileContent(input json.RawMessage) (string, error) {
@@ -29,27 +30,67 @@ func EditFileContent(input json.RawMessage) (string, error) {
 	if err := json.Unmarshal(input, &editInput); err != nil {
 		return "", err
 	}
-
 	if editInput.FilePath == "" || editInput.OldText == editInput.NewText {
 		return "", fmt.Errorf("invalid input parameters")
 	}
 
-	content, err := os.ReadFile(editInput.FilePath)
+	origBytes, err := os.ReadFile(editInput.FilePath)
 	if err != nil {
 		if os.IsNotExist(err) && editInput.OldText == "" {
-			return createNewFile(editInput.FilePath, editInput.NewText)
+			return createNewFileWithDiff(editInput.FilePath, editInput.NewText)
 		}
 		return "", err
 	}
+	original := string(origBytes)
 
-	updatedContent := strings.Replace(string(content), editInput.OldText, editInput.NewText, -1)
-	if string(content) == updatedContent && editInput.OldText != "" {
+	updated := strings.Replace(original, editInput.OldText, editInput.NewText, -1)
+	if original == updated && editInput.OldText != "" {
 		return "", fmt.Errorf("text to replace not found")
 	}
 
-	if err := os.WriteFile(editInput.FilePath, []byte(updatedContent), 0644); err != nil {
-		return "", err
+	fmt.Println(chalk.Bold.TextStyle(editInput.FilePath))
+
+	dmp := diffmatchpatch.New()
+	diffs := dmp.DiffMain(original, updated, false)
+	dmp.DiffCleanupSemantic(diffs)
+
+	for _, d := range diffs {
+		lines := strings.SplitAfter(d.Text, "\n")
+		for _, line := range lines {
+			if line == "" {
+				continue
+			}
+			switch d.Type {
+			case diffmatchpatch.DiffInsert:
+				fmt.Print(chalk.Green.Color("+"+line), chalk.Reset)
+			case diffmatchpatch.DiffDelete:
+				fmt.Print(chalk.Red.Color("-"+line), chalk.Reset)
+			case diffmatchpatch.DiffEqual:
+				fmt.Print(chalk.White.Color(" "+line), chalk.Reset)
+			}
+		}
 	}
 
+	fmt.Println()
+
+	if err := os.WriteFile(editInput.FilePath, []byte(updated), 0644); err != nil {
+		return "", err
+	}
 	return "Edit successful", nil
+}
+
+func createNewFileWithDiff(path, content string) (string, error) {
+	fmt.Println(chalk.Bold.TextStyle(path))
+
+	for _, line := range strings.SplitAfter(content, "\n") {
+		if line == "" {
+			continue
+		}
+		fmt.Print(chalk.Green.Color("+"+line), chalk.Reset)
+	}
+
+	if err := os.WriteFile(path, []byte(content), 0644); err != nil {
+		return "", err
+	}
+	return "File created and diff shown", nil
 }

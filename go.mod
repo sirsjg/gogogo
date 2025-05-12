@@ -5,6 +5,7 @@ go 1.24.3
 require (
 	github.com/anthropics/anthropic-sdk-go v0.2.0-beta.3
 	github.com/invopop/jsonschema v0.13.0
+	github.com/sergi/go-diff v1.3.1
 	github.com/ttacon/chalk v0.0.0-20160626202418-22c06c80ed31
 )
 

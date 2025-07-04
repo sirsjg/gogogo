@@ -1,6 +1,6 @@
-# ✨ Snazz Code Agent
+# ✨ GOGOGO Code Agent
 
-Snazz is a lightweight command-line agentic code assistant written in Go built by enthusiasts, for enthusiasts. Currently Snazz only supports Claude, but we are investigating other LLM support depending on interest.
+GOGOGO is a lightweight command-line agentic code assistant written in Go built by enthusiasts, for enthusiasts. Currently Snazz only supports Claude, but we are investigating other LLM support depending on interest.
 
 > [!NOTE]
 > This project is currently under active development. Contributions are highly encouraged — join in on the fun!
